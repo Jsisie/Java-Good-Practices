@@ -80,7 +80,7 @@ Supporting components:
 - **JRE (Java Runtime Environment)**: Supports the execution environment, providing necessary libraries and JVM.
 - **JDK (Java Development Kit)**: Used in the development phase to compile Java source code into bytecode (contains JRE).
 
-![](.\data\java_environment_architecture.png)
+<img src="https://javapapers.com/wp-content/uploads/2009/05/jvm-jre-jdk1.png" height="400">
 
 ## <a name="chap3">III - Basic Notions</a>
 
