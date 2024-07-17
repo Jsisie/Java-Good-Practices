@@ -82,5 +82,23 @@ Supporting components:
 
 <img src="https://javapapers.com/wp-content/uploads/2009/05/jvm-jre-jdk1.png" height="400">
 
+**Compile :**
+
+- `javac Foo.java` => Compile the java file and build the compiled file *Foo.class*. 
+- `java Foo` => Execute the main code of Class Foo
+
+NB : For the `javac` command, *Foo* is the name of the file and for the `java` command, *Foo* is the name of the Class.
+
+- `java Foo.java` => Compile and execute at the same time, but only works with one class.
+
+**Jshell :** 
+**REPL** (**R**ead–**E**val–**P**rint **L**oop), allows to quickly try a functionality. Ex :
+
+- jshell> var a = 3 
+  a ==> 3 
+- jshell> System.out.println(a)
+  3
+
 ## <a name="chap3">III - Basic Notions</a>
 
+In Java, Classes are written in CamelCase, variables and methods are written in camelCase.
