@@ -12,6 +12,8 @@ Regarding Rémi Forax's course : https://www-igm.univ-mlv.fr/~forax/ens/java-ava
 - I - [Introduction](#chap1)
 - II - [Execution Environment](#chap2)
 - III - [Basic Notions](#chap3)
+  - III.I - [Types](#chap3.1)
+  - III.II - [Records](#chap3.2)
 - IV - [](#chap4)
 - V - [](#chap5)
 - VI - [](#chap6)
@@ -102,3 +104,73 @@ NB : For the `javac` command, *Foo* is the name of the file and for the `java` c
 ## <a name="chap3">III - Basic Notions</a>
 
 In Java, Classes are written in CamelCase, variables and methods are written in camelCase.
+
+### <a name="chap3.1">III.I - Types</a>
+
+Java has two kind of types :
+
+**Primitives Types :**
+
+boolean, byte, chart, short, int, long, float, double (starts with lowercase).
+Handled by their values. Ex :
+
+```java
+int i = 3;
+int j = i; // copy 3
+```
+
+Values are stored directly in the Stack.
+
+**Object Types :**
+
+String, LocalDate, Pattern, int[], etc. (starts with uppercase).
+Handled by their references. Ex :
+
+```java
+String s = "hello";
+String s2 = s; // copy address to memory
+```
+
+Values are stored in the Heap and the references are stored in the Stack.
+
+<img src="https://www.baeldung.com/wp-content/uploads/2018/07/java-heap-stack-diagram.png">
+
+**Operator "==" :**
+
+The "==" operator tests if two locations in stack memory are equal. For primitive types, it checks if the variable values are equal, and for object types, it checks if the addresses are equal.
+
+```java
+int i = 3;
+int j = 4;
+i == j // returns false
+i == i // returns true
+
+String s1 = "Hello";
+String s2 = "Hello";
+s1 == s2 // returns false
+```
+
+**Processors :**
+
+Processors have 4 types : 
+
+- int 32bits
+- int 64bits
+- float 32bits
+- float 64bits
+
+*boolean, byte, short, char => int 32bits*
+
+Compiler prohibits calculations between booleans, but for the byte, short and char :
+
+```java
+short s = 3;
+short s2 = s + s; // doesn't compile because the result is an int
+```
+
+*byte, short, int, long, float* and *double* are all signed. *char* is the only unsigned type.
+We use *"<<"* and *">>"* for the signed variables, and *">>>"* for the unsigned types. 
+
+<img src="https://i.sstatic.net/S5kAd.png">
+
+### <a name="chap3.2">III.II - Record</a>
