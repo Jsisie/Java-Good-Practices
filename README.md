@@ -15,6 +15,7 @@ Regarding Rémi Forax's course : https://www-igm.univ-mlv.fr/~forax/ens/java-ava
   - III.I - [Types](#chap3.1)
   - III.II - [Classes](#chap3.2)
   - III.III - [Arrays](#chap3.3)
+  - III.IV - [Package](#chap3.4)
 - IV - [](#chap4)
 - V - [](#chap5)
 - VI - [](#chap6)
@@ -294,7 +295,7 @@ public class Book(String name) {
 }
 ```
 
-<a name="chap3.3">III.III - Arrays</a>
+### <a name="chap3.3">III.III - Arrays</a>
 
 As we've seen, arrays are Object Types in java. They can contains both primitives and objects types. We classically use the "*new*" keyword to create them.
 
@@ -326,6 +327,38 @@ for(var i = 0; i < array.length; i++) { // classic for loop
 }
 for(var element: array) { // for-each loop
 	...
+}
+```
+
+### <a name="chap3.4">III.IV - Package</a>
+
+In java, a library is composed of multiple packages. For example, the default library in Java JDK contains :
+
+- java.lang => default classes of java
+- java.util => useful classes, data structures and Collections
+- java.util.regex => regular expression
+- java.sql => basic classes to access DataBase
+- java.io => For input/output
+- java.nio.file => input/output on files *(do NOT use Files classes from java.io)*
+- etc.
+
+**Import :**
+
+We find the import as the beginning of a file in java, it represents the classes and records we want to use from different packages than where our file is located.
+In fact, java doesn't really "import" any files (unlike C or Python), it would be more precise to call it an "alias".
+
+```java
+public class Hello {
+    public static void main(String[] args) {
+ 		var list = new java.util.ArrayList(); // Works !
+ 	}
+}
+// These two codes are equal
+import java.util.ArrayList; // Indicate the alias for ArrayList to the compiler
+public class Hello {
+	public static void main(String[] args) {
+ 		var list = new ArrayList(); // Also works !
+	}
 }
 ```
 
