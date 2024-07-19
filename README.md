@@ -16,6 +16,7 @@ Regarding Rémi Forax's course : https://www-igm.univ-mlv.fr/~forax/ens/java-ava
   - III.II - [Classes](#chap3.2)
   - III.III - [Arrays](#chap3.3)
   - III.IV - [Package](#chap3.4)
+  - III.V - [Java Bean](#chap3.5)
 - IV - [](#chap4)
 - V - [](#chap5)
 - VI - [](#chap6)
@@ -362,3 +363,16 @@ public class Hello {
 }
 ```
 
+### <a name="chap3.5">III.V - Java Bean</a>
+
+A Java Bean is a special class with **getters** and **setters**. This is mostly the only case in Java where we'll find a class that has getters and setters. Otherwise it will be considered as a very bad practice.
+
+- setters => save values inside an object => *setXX()* (with XX being the value).
+- getters => extract values from an object => *getXX()* or *isXX()* 
+
+Java possesses many frameworks using the notion of Java Beans (EJB (Entreprise Java Beans)) :
+
+- Web Services :  *Spring, JBoss, Quarkus, Micronaut...*
+- Read DataBase line as an object : *Hibernate*
+- Transform Objects from/to JSON : *Jackson, Gson*
+- etc.
