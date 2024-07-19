@@ -13,7 +13,8 @@ Regarding Rémi Forax's course : https://www-igm.univ-mlv.fr/~forax/ens/java-ava
 - II - [Execution Environment](#chap2)
 - III - [Basic Notions](#chap3)
   - III.I - [Types](#chap3.1)
-  - III.II - [Records](#chap3.2)
+  - III.II - [Classes](#chap3.2)
+  - III.III - [Arrays](#chap3.3)
 - IV - [](#chap4)
 - V - [](#chap5)
 - VI - [](#chap6)
@@ -173,4 +174,114 @@ We use *"<<"* and *">>"* for the signed variables, and *">>>"* for the unsigned 
 
 <img src="https://i.sstatic.net/S5kAd.png">
 
-### <a name="chap3.2">III.II - Record</a>
+### <a name="chap3.2">III.II - Classes</a>
+
+**Instantiations :**
+
+In a method, the **this** keyword represents the object just before the '.' when calling the method.
+
+```java
+public class Point {
+ 	public double distanceToOrigin(Point this) {
+ 		return 0;
+ 	}
+}
+...
+var p = new Point();
+var value = p.returnZero(); // When returnZero is called, "this" == "p"
+```
+
+NB : We never write or see the "*Object this*" in parameter of the methods because the compiler adds it automatically. We can then just write the method returnZero() that way :
+
+```java
+public double distanceToOrigin() {
+    return 0;
+}
+```
+
+In **static** methods, the keyword "*this*" doesn't exist as static methods are unbound to instantiation and objects. Exemple :
+
+```java
+public record Taxi(boolean uber) {
+ 	public String name() { // "this" implicit
+ 		return this.uber? "Uber": "Hubert?";
+ 	}
+ 	public static String bar() { // this doesn't exit here
+ 		return "Hello Taxi";
+ 	}
+}
+…
+new Taxi(true).name() // Uber
+Taxi.bar() // Hello Taxi
+```
+
+The **main()** method is a special method which serves as an entry point into the program. It is defined that way inside a Class or a Record :
+
+```java
+public static void main(String[] args) {
+	...
+}
+```
+
+**Record :**
+
+Immutable object considered as a tuple. We can create methods inside the Record just like for a Class. Records are created with the "*new*" keyword just like a classic object.
+
+By default records have an all arguments constructor which is called *canonical constructor*. It is common to redefine the constructor to add checks and verifications. It exists a "compact" canonical constructor for this :
+
+```java
+public record Person(String name, int age) {
+ 	public Person(String name, int age) { // canonical constructor (automatically generated)
+ 		this.name = name;
+ 		this.age = age;
+	}
+}
+
+public record Person(String name, int age) {
+	public Person { // compact canonical constructor
+ 		Objects.requireNonNull(name, "name is null"); // Checks name is not null
+        if (age < 0) // Checks age is greater than 0
+            throw new IllegalArgumentException("Age < 0");
+    }
+}
+```
+
+Compiler also generate automatically *equals()*, *hashCode()* and *toString()* method for Records. They can still be obviously overridden, with the "*@Override*" annotation.
+
+Record also provides getters(), with the exact same name as the fields :
+
+```java 
+public record Person(String name, int age) {}
+...
+var p = new Person("toto", 1);
+p.name() // toto
+p.age // 1
+```
+
+**Fields :**
+
+Inside a Class or a Record, fields are accessed with the keywork **this**, as long as it's written inside the curly brackets of the Class.
+
+```java
+public record Point(int x, int y) {
+ 	public double distanceToOrigin() {
+ 		return Math.sqrt(this.x * this.x + this.y * this.y); // this.x works here
+ 	}
+}
+...
+var point = new Point(3, 4);
+System.out.println(point.x); // doesn't compile
+```
+
+Like for the methods, "*this*" is implicit and doesn't need to be written inside the class, except when a parameter with the same name is being used, which usually happens in constructor :
+
+```java 
+public class Book(String name) {
+    public Book(String name) {
+        Objects.requireNonNull(name, "name is null");
+        this.name = name; // We instantiate the field name with the given parameter name
+    }
+}
+```
+
+<a name="chap3.3">III.III - Arrays</a>
