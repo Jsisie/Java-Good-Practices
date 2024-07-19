@@ -151,6 +151,16 @@ String s2 = "Hello";
 s1 == s2 // returns false
 ```
 
+**Default values :**
+
+In java, all types have default values.
+
+- boolean => false
+- int,short => 0
+- long/double => 0.0
+- char => \0 (u0000)
+- Object => null
+
 **Processors :**
 
 Processors have 4 types : 
@@ -285,3 +295,37 @@ public class Book(String name) {
 ```
 
 <a name="chap3.3">III.III - Arrays</a>
+
+As we've seen, arrays are Object Types in java. They can contains both primitives and objects types. We classically use the "*new*" keyword to create them.
+
+```java
+String[] array = new String[16]; // initialize with default values (0,false,0.0,null)
+int[] array = new int[] { 2, 46, 78, 34 }; // creates with the given values
+```
+
+- Arrays have a fixed size, which can be seen with the **length** parameter. ex: `array.length`
+- Arrays are mutable, we use "[" and "]" to modify their values. ex: `array[3] = 56;`
+- We can't exceed length limits :
+
+```java
+var array = new int[12];
+array[25] = … // throws ArrayIndexOutOfBoundsException
+array[-1] = … // throws ArrayIndexOutOfBoundsException
+```
+
+**loop :**
+
+Java proposes a compact version of the *for* loop, also known as *for-each*.
+
+```java 
+var array = ...
+
+for(var i = 0; i < array.length; i++) { // classic for loop
+ 	var element = array[i];
+ 	...
+}
+for(var element: array) { // for-each loop
+	...
+}
+```
+
