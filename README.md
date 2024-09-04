@@ -17,6 +17,8 @@ Regarding Rémi Forax's course : https://www-igm.univ-mlv.fr/~forax/ens/java-ava
   - III.III - [Arrays](#chap3.3)
   - III.IV - [Package](#chap3.4)
   - III.V - [Java Bean](#chap3.5)
+  - III.VI - [Conditions](#chap3.6)
+  - III.VII - [String](#chap3.7)
 - IV - [](#chap4)
 - V - [](#chap5)
 - VI - [](#chap6)
@@ -153,6 +155,8 @@ String s2 = "Hello";
 s1 == s2 // returns false
 ```
 
+*In this example, "s1==s2" actually returns true. For more details, see the [String](#chap3.7) chapter.)*
+
 **Default values :**
 
 In java, all types have default values.
@@ -218,7 +222,7 @@ public record Taxi(boolean uber) {
  	public String name() { // "this" implicit
  		return this.uber? "Uber": "Hubert?";
  	}
- 	public static String bar() { // this doesn't exit here
+ 	public static String bar() { // "this" doesn't exit here
  		return "Hello Taxi";
  	}
 }
@@ -252,8 +256,8 @@ public record Person(String name, int age) {
 public record Person(String name, int age) {
 	public Person { // compact canonical constructor
  		Objects.requireNonNull(name, "name is null"); // Checks name is not null
-        if (age < 0) // Checks age is greater than 0
-            throw new IllegalArgumentException("Age < 0");
+   		if (age < 0) // Checks age is greater than 0
+			throw new IllegalArgumentException("Age < 0");
     }
 }
 ```
@@ -277,7 +281,7 @@ Inside a Class or a Record, fields are accessed with the keywork **this**, as lo
 ```java
 public record Point(int x, int y) {
  	public double distanceToOrigin() {
- 		return Math.sqrt(this.x * this.x + this.y * this.y); // this.x works here
+ 		return Math.sqrt(this.x * this.x + this.y * this.y); // "this.x" works here
  	}
 }
 ...
@@ -365,10 +369,10 @@ public class Hello {
 
 ### <a name="chap3.5">III.V - Java Bean</a>
 
-A Java Bean is a special class with **getters** and **setters**. This is mostly the only case in Java where we'll find a class that has getters and setters. Otherwise it will be considered as a very bad practice.
+A Java Bean is a special class with **getters** "and **setters**. This is mostly the only case in Java where we'll find a class that has getters and setters. Otherwise it will be considered as a very bad practice.
 
 - setters => save values inside an object => *setXX()* (with XX being the value).
-- getters => extract values from an object => *getXX()* or *isXX()* 
+- getters => extract values from an object => *getXX()* or *isXX()*.
 
 Java possesses many frameworks using the notion of Java Beans (EJB (Entreprise Java Beans)) :
 
@@ -376,3 +380,209 @@ Java possesses many frameworks using the notion of Java Beans (EJB (Entreprise J
 - Read DataBase line as an object : *Hibernate*
 - Transform Objects from/to JSON : *Jackson, Gson*
 - etc.
+
+### <a name="chap3.6">III.VI - Conditions</a>
+
+In java, conditions in if, while, for must be boolean (no *while(1)* like in C).
+
+#### Switch :
+
+C (compatible in java) switch : 
+
+```java
+int seats = …
+String type;
+switch(seats) {
+	case 1:
+		type = "small";
+ 		break;
+ 	case 4: {
+ 		System.out.println("debug");
+ 		type = "medium";
+ 		break;
+ 	}
+ 	default:
+ 		type = "big";
+}
+```
+
+You should **never** forget the *break* keyword inside the switch condition, otherwise it will pass to the next case. You don't need a *break* in the *default* case as it's the last case of the switch (it can't pass to an other case).
+
+Now let's see the the special java switch, a more compact switch using arrows ("->") that can also returns values :
+
+```java
+int seats = …
+String type = switch(seats) {
+	case 1, 2 -> "small";
+ 	case 3, 4, 5 -> {
+ 		System.out.println("debug");
+ 		yield "medium";
+ 	}
+ 	default -> "big";
+}
+```
+
+For a return switch (a switch that returns a value), we don't to create a block with the "{ }" brackets, we can simply write the value. I you want to return the value inside a block, you will need to use the *yield* keyword.
+
+The *default* case at the end is necessary in a switch for the program to compile.
+
+### <a name="chap3.7">III.VII - String</a>
+
+In Java, the *String* class represents a sequence of character. The class is immutable. I you want to change a character of the sequence, you will have to generate a new String (or java will do it for you in specific methods).
+
+There are 2 types of String in java :
+
+- Simple String, written between quotes. Ex : "This is an immutable char sequence"
+- *Text block*, can be written on many lines between 3 quotes. Ex :
+  """
+  This is an
+  immutable char
+  sequence
+  """
+
+The special String characters are the same as in C :
+
+- \n : Return to new line
+- \r : Carriage return
+- \t : Tabulation
+- \\' : Simple quote
+- \\" : Double quote
+- \\ : Backslash
+
+#### Memory :
+
+String, as objects in java, are references to values in memory. The actual values (literals String) are stored in a dictionary/cache. What it means is that two different String defined with the same value (defined in " or """) will be equals, even in memory (with '=='). Ex : 
+
+```java
+String s = "hello";
+String s2 = "hello";
+s == s2 // true, unlike we've seen earlier
+```
+
+Even though, you should always use the *equals()* method to test the value of two String.
+
+#### Methods :
+
+Most common methods : 
+
+- s.length() : Returns the size of the String
+- s.charAt(index) : Get the character at the given index
+- s.repeat(times) : Repeat the same String "times" times
+- s1.compareTo(s2) : < 0 if s1 is smaller than s2, > 0 if s1 is bigger than s2, == 0 if s1 and s2 are equals
+- s.startsWith(prefix) : Returns boolean if it starts with the given prefix
+- s.endsWith(suffix) : Returns boolean if it ends with the given suffix
+- s.indexOf(char) : Returns the index of the first occurrence of the given char, returns -1 if not found
+- lastIndexOf(char) : Returns the index of the last occurrence of the given char, returns -1 if not found
+- s.substring(start, end) : Returns the String between the indexes start and end
+- s.substring(end) : *(equivalent to s.substring(0, end))*
+- s.toLowerCase() : Converts all the characters of a String to lower case
+- s.toUpperCase() : Converts all the characters of a String to upper case
+- s.split(regex) : Splits the String in an array, given the regex in parameters
+- String.join(delimiter, elements) : Joins the values of an array (elements) with a delimiter
+
+##### Convert a String in primitive types :
+
+- Boolean.parseBoolean(text)
+- Integer.parseInt(text)
+- Double.parseDouble(text)
+
+##### Convert a primitive type into String :
+
+2 ways. First, with a method :
+
+- Boolean.toString(boolean value)
+- Integer.toString(int value)
+- Double.toString (double value)
+
+Second, with the '+' operator and an empty String. Example :
+
+```java
+int value = 4;
+String text = value + "";
+```
+
+#### Switch on String :
+
+Just like a *if* condition, the switch uses the *hashCode()* and *equals()* methods to match the value with the case. In the end, the compilator will then test the equality of the hashed values, like this :
+
+```java
+return switch(vehicle) {
+ case "bicycle" -> 10;
+ case "car", "sedan" -> 20;
+ default -> throw new IAE("unknown " + vehicle);
+ };
+```
+
+This code above is equal to the following code :
+
+```java
+var index = switch(vehicle.hashCode()) {
+ case -117759745 -> vehicle.equals("bicycle")? 0: -1;
+ case 98260, -> vehicle.equals("car")? 1: -1;
+ case 109313023 -> vehicle.equals("sedan") ? 1: -1;
+ default -> -1;
+ };
+ return switch(index) {
+ case 0 - > 10;
+ case 1 - > 20;
+ default - > throw new IAE(…);
+ };
+
+```
+
+#### Concatenation :
+
+As we said, a String is immutable, so one concatenation using the operator '+' reallocate a new String. If we make many concatenation in the same expression, Java will allocate only one String all the time :
+
+```java
+return type + " " + age; // 1 allocation
+```
+
+However, in a loop, java will reallocate a new String at each iteration, which is a terrible complexity for a code :
+
+```java
+var result = "";
+ for(var s: array) {
+ result = result + ":" + s; // 1 allocation at each iteration
+ }
+ return result;
+```
+
+To avoid this major problem, we use the class *StringBuilder*.
+
+#### StringBuilder :
+
+A StringBuilder is a class that provides an extensible character buffer.
+
+```java
+var builder = new StringBuilder();
+for(var s: array) {
+	builder.append(s);
+	builder.append(":");
+}
+return builder.toString(); // Creates the String here
+```
+
+You can chain the *append()* calls, as the method returns itself (the StringBuilder).
+
+```java
+for(var s: array) {
+	builder.append(s).append(":"); // We can then simplify the code above like this
+}
+```
+
+!!! You should **NEVER** put a '+' operator in an *append()* method, as it will cancel the benefits of the StringBuilder !!!
+
+The code we've seen is actually incorrect, as it will append a ':' separator at the end of the String, with no element after it. Here is a clean way to correct the code and to write a *join()* method :
+
+```java
+String join(String[] array) {
+	var builder = new StringBuilder();
+	var separator = "";
+	for(var s: array) {
+		builder.append(separator).append(s); // As the separator is empty, it will append.. nothing
+		separator = ":";
+	}
+	return builder.toString();
+}
+```
