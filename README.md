@@ -19,6 +19,7 @@ Regarding Rémi Forax's course : https://www-igm.univ-mlv.fr/~forax/ens/java-ava
   - III.V - [Java Bean](#chap3.5)
   - III.VI - [Conditions](#chap3.6)
   - III.VII - [String](#chap3.7)
+  - III.VIII - [Formatting and Matching](#chap3.8)
 - IV - [](#chap4)
 - V - [](#chap5)
 - VI - [](#chap6)
@@ -585,4 +586,56 @@ String join(String[] array) {
 	}
 	return builder.toString();
 }
+```
+
+### <a name="chap3.8">III.VIII - Formatting and Matching</a>
+
+#### Regex :
+
+A regular expression (regex) is a pattern of characters that describes a set of strings. **Pattern** *(java.util.regex.)* is a class that represents an automate build from a regex. **Matcher** is a class that skim trough the automate created on a text.
+
+Example :
+
+```java
+Pattern pattern = Pattern.compile("a+"); // Pattern "a+", corresponds to one or many letters 'a'
+
+Matcher matcher = pattern.matcher("aaaaab"); // Execute the pattern to the text "aaaaab"
+
+matcher.matches(); // Matches the entire text (false here because of 'b')
+matcher.lookingAt(); // Matches the beginning of the text (true here)
+matcher.find(); // Matches somewhere in the text (true here)
+matcher.start(); // Returns the start index of the current match
+matcher.end(); // Returns the end index of the current match (exclusive)
+matcher.group(); // Returns the matched substring
+```
+
+Many ways to compose patterns :
+
+- word: hello
+- repetition: +, *, ?
+- conjunction/disjunction: a+b+, foo|bar
+- characters: [abc], [a-z]
+- classes: \d, \p{Digit}, \p{Alpha}
+- capture: (a+)
+
+List of examples :
+
+```java
+var pattern = Pattern.compile("a+");
+pattern.matcher("aaa").matches(); // true - one or more 'a' characters
+
+var pattern = Pattern.compile("[0-9]+\\.[0-9]*");
+pattern.matcher("12.5").matches(); // true - decimal number with digits before the dot and optional digits after
+
+var pattern = Pattern.compile("\\d+\\.\\d*");
+pattern.matcher("24.").matches(); // true - decimal number with digits before the dot, optional digits after
+
+var pattern = Pattern.compile("-?[0-9]+");
+pattern.matcher("-14").matches(); // true - integer, optionally negative
+
+var pattern = Pattern.compile("[A-Za-z][A-Za-z_0-9]*");
+pattern.matcher("old_regex3").matches(); // true - valid identifier, starting with a letter, followed by letters, numbers, or underscores
+
+var pattern = Pattern.compile("\\p{Alpha}\\w*");
+pattern.matcher("old_regex3").matches(); // true - identifier starting with a letter and followed by alphanumeric characters or underscores
 ```
