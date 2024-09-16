@@ -193,6 +193,60 @@ We use *"<<"* and *">>"* for the signed variables, and *">>>"* for the unsigned 
 
 ### <a name="chap3.2">III.II - Classes</a>
 
+**Constructor :**
+
+A constructor is an instance method that initialize the fields of a class. 
+
+- The constructor must have the same name of the class.
+- No return value (no need to write "void" in the declaration).
+- The first parameter is *this* (implicit).
+
+The **preconditions** are the conditions required to insure the object will be correctly generate :
+
+```java
+public class Person {
+	private final String name;
+ 	private int age;
+ 	public Person(String name, int age) { // "this" is implicit
+ 		Objects.requireNonNull(name, "name is null"); // precondition
+ 		if (age < 0) { // precondition
+ 			throw new IAE("age < 0");
+ 		}
+ 		this.name = name; 
+ 		this.age = age;
+ 	}
+}
+```
+
+#### Generated constructor :
+
+- For a **class**, a *public* constructor with *no parameters* will be automatically created if no constructor is defined by the programmer. 
+- For a **record**, a *canonical constructor* will be generated with arguments (check Record part for more details).
+
+#### Overloading :
+
+**Constructor overloading** in java is the implementation of many constructors for one same class. They :
+
+- Must have the same name of the class,
+- Must have different parameters arguments (not the same number, not the same type)
+- Can call other constructors with the keyword **this(...)**.
+
+Example :
+
+```java
+public class Car {
+ 	private final String color;
+ 	public Car(String color) {
+ 		this.color = Objects.requireNonNull(color); // precondition
+ 	}
+ 	public Car() {
+ 		this("red"); // call above constructor Car(String)
+ 	}
+}
+```
+
+Constructor overloading in not considered as a very good practice and should be avoided if possible.
+
 **Instantiations :**
 
 In a method, the **this** keyword represents the object just before the '.' when calling the method.
@@ -216,11 +270,13 @@ public double distanceToOrigin() {
 }
 ```
 
-In **static** methods, the keyword "*this*" doesn't exist as static methods are unbound to instantiation and objects. Exemple :
+In **static** methods, the keyword "*this*" doesn't exist as static methods are unbound to instantiation and objects. 
+
+Exemple :
 
 ```java
 public record Taxi(boolean uber) {
- 	public String name() { // "this" implicit
+ 	public String name() { // "this" is implicit
  		return this.uber? "Uber": "Hubert?";
  	}
  	public static String bar() { // "this" doesn't exit here
@@ -244,7 +300,7 @@ public static void main(String[] args) {
 
 Immutable object considered as a tuple. We can create methods inside the Record just like for a Class. Records are created with the "*new*" keyword just like a classic object.
 
-By default records have an all arguments constructor which is called *canonical constructor*. It is common to redefine the constructor to add checks and verifications. It exists a "compact" canonical constructor for this :
+By default, records have an all arguments constructor which is called *canonical constructor*. It is common to redefine the constructor to add checks and verifications. It exists a "compact" canonical constructor for this :
 
 ```java
 public record Person(String name, int age) {
@@ -300,6 +356,78 @@ public class Book(String name) {
     }
 }
 ```
+
+
+You can initialize fields at the declaration with the keyword '=' :
+
+```java
+public class Garage {
+ private final ArrayList<Car> cars = new ArrayList<>();
+}
+```
+
+The code will be copied at the beginning of the constructor :
+
+```java
+public class Garage {
+	private final ArrayList<Car> cars;
+	public Garage() {
+		this.cars = new ArrayList<>();
+	}
+}
+```
+
+#### Final fields :
+
+A **final** field must be initialized in the *constructor*. A **non-final** field is not necessarily initialized in a *constructor*, and will have a default value in this case (0, 0.0, false or null). Not to be confused with local variables, which must **always** be initialized.
+
+If you want to change the value of an object, you will have to return a new Object :
+
+```java
+public class Person {
+	private final String name;
+ 	private final int age;
+ 	public Person(String name, int age) {
+        Objects.requireNonNull(name, "name must not be null");
+        if(age < 0) throw new IllegalArgumentException("age must be equal or superior to 0");
+        this.name = name;
+        this.age = age;
+    }
+ 	public Person updateAge() {
+ 		return new Person(name, age + 1);
+ 	}
+}
+```
+
+A class with all its fields being final is called "immutable" (just like Records). Those classes are easier to maintain, but changing the value of a field requires the creation of a new Object (an a new memory allocation).
+
+#### Static fields :
+
+A **static** field is a global variable stored in a class. By convention, we'll write the name of it in full caps and with '_' :
+
+```java
+public record Author(String name) {
+ 	private static int NUMBER_OF_AUTHORS; // Like in C, this is considered as a good practice.
+ 	public Author {
+ 		if (NUMBER_OF_AUTHORS++ >= 100) {
+ 			throw new ISE("too many authors");
+ 		}
+ 	}
+}
+```
+
+However, if this global variable is final, it will transform as a constant, which is a really good practice :
+
+```java
+public record Asset(long price) {
+ 	private static final long MAX_TAX = 1_000_000L; // Constant in java (private static final )
+ 		public long computeTax() {
+ 			return Math.min(MAX_TAX, price / 10);
+ 		}
+}
+```
+
+
 
 ### <a name="chap3.3">III.III - Arrays</a>
 
